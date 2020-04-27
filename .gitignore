@@ -1,0 +1,17 @@
+# Gradle
+.gradle
+/build/
+gradle
+gradlew
+gradlew.bat
+
+# IDEA
+.idea
+*.iml
+
+# Ghidra
+/dist/
+gradle.properties
+
+# Scala lib
+/lib/scala-library*.jar
