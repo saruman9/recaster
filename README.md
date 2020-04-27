@@ -7,6 +7,16 @@ The plugin search dependencies of the variable/parameter and change their names 
 ![Example of using](./images/example_of_using.gif "Example of using")
 > Fig. 1. Example of using the plugin
 
+## Building
+
+Run the following command in a terminal of your choice.
+
+`$ gradle`
+
+## Installation
+
+Launch Ghidra and from the Project Manager go to `File` → `Install Extensions...`. Click the `+` icon near the top right corner of the window. Select the archive with the extension. Restart Ghidra. After restarting the plugin will be installed and ready for use (you will be asked about enabling of the plugin).
+
 ## Instruction
 
 1. Find the target: argument of the function.
