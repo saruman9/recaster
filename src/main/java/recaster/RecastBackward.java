@@ -42,6 +42,7 @@ import ghidra.program.model.pcode.PcodeException;
 import ghidra.program.model.pcode.PcodeOp;
 import ghidra.program.model.pcode.Varnode;
 import ghidra.program.model.symbol.SourceType;
+import ghidra.program.model.symbol.Symbol;
 import ghidra.util.HelpLocation;
 import ghidra.util.Msg;
 import ghidra.util.data.DataTypeParser;
@@ -167,7 +168,8 @@ public class RecastBackward extends RecastForward {
         if (highSymbol == null) {
             return;
         }
-        if (!(plugin.getSourceTypeList().contains(highSymbol.getSymbol().getSource()))) {
+        Symbol symbol = highSymbol.getSymbol();
+        if (symbol != null && !(plugin.getSourceTypeList().contains(symbol.getSource()))) {
             return;
         }
 
