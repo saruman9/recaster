@@ -395,7 +395,7 @@ public class RecastForward extends DockingAction {
                     this.callPCodeOp = callPCodeOp;
                     return true;
                 } else {
-                    if (checkCallPCode(callPCodeOp, output.getDescendants())) {
+                    if (output != null && checkCallPCode(callPCodeOp, output.getDescendants())) {
                         return true;
                     }
                 }
