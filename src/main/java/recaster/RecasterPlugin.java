@@ -50,13 +50,13 @@ public class RecasterPlugin extends ProgramPlugin implements OptionsChangeListen
 
     private static final String TYPE_NAME_OVERRIDE_OPTION_NAME = "Override name/type";
     private static final TypeNameOverrideOption TYPE_NAME_OVERRIDE_OPTION_DEFAULT =
-            TypeNameOverrideOption.BOTH;
+        TypeNameOverrideOption.BOTH;
 
     private static final String SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_NAME = "Override DEFAULT";
     private static final String SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_NAME = "Override ANALYSIS";
     private static final String SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_NAME = "Override IMPORTED";
     private static final String SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_NAME =
-            "Override USER_DEFINED";
+        "Override USER_DEFINED";
 
     private static final boolean SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_DEFAULT = true;
     private static final boolean SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_DEFAULT = false;
@@ -102,29 +102,24 @@ public class RecasterPlugin extends ProgramPlugin implements OptionsChangeListen
         ToolOptions options = tool.getOptions(MAIN_NAME);
 
         options.registerOption(TYPE_NAME_OVERRIDE_OPTION_NAME, TYPE_NAME_OVERRIDE_OPTION_DEFAULT,
-                               null, "Choose, what you want to override"
-        );
+            null, "Choose, what you want to override");
 
         options.registerOption(SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_DEFAULT,
-                               null,
-                               "Override variables with DEFAULT Source Type"
-        );
+            SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_DEFAULT,
+            null,
+            "Override variables with DEFAULT Source Type");
         options.registerOption(SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_DEFAULT,
-                               null,
-                               "Override variables with ANALYSIS Source Type"
-        );
+            SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_DEFAULT,
+            null,
+            "Override variables with ANALYSIS Source Type");
         options.registerOption(SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_DEFAULT,
-                               null,
-                               "Override variables with IMPORTED Source Type"
-        );
+            SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_DEFAULT,
+            null,
+            "Override variables with IMPORTED Source Type");
         options.registerOption(SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_DEFAULT,
-                               null,
-                               "Override variables with USER_DEFINED Source Type"
-        );
+            SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_DEFAULT,
+            null,
+            "Override variables with USER_DEFINED Source Type");
 
         options.addOptionsChangeListener(this);
     }
@@ -133,33 +128,29 @@ public class RecasterPlugin extends ProgramPlugin implements OptionsChangeListen
         Options options = tool.getOptions(MAIN_NAME);
 
         typeNameOverrideOption =
-                options.getEnum(TYPE_NAME_OVERRIDE_OPTION_NAME, TYPE_NAME_OVERRIDE_OPTION_DEFAULT);
+            options.getEnum(TYPE_NAME_OVERRIDE_OPTION_NAME, TYPE_NAME_OVERRIDE_OPTION_DEFAULT);
         sourceTypeList.clear();
         if (options.getBoolean(SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_DEFAULT
-        )) {
+            SOURCE_TYPE_OVERRIDE_DEFAULT_OPTION_DEFAULT)) {
             sourceTypeList.add(SourceType.DEFAULT);
         }
         if (options.getBoolean(SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_DEFAULT
-        )) {
+            SOURCE_TYPE_OVERRIDE_ANALYSIS_OPTION_DEFAULT)) {
             sourceTypeList.add(SourceType.ANALYSIS);
         }
         if (options.getBoolean(SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_DEFAULT
-        )) {
+            SOURCE_TYPE_OVERRIDE_IMPORTED_OPTION_DEFAULT)) {
             sourceTypeList.add(SourceType.IMPORTED);
         }
         if (options.getBoolean(SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_NAME,
-                               SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_DEFAULT
-        )) {
+            SOURCE_TYPE_OVERRIDE_USER_DEFINED_OPTION_DEFAULT)) {
             sourceTypeList.add(SourceType.USER_DEFINED);
         }
     }
 
     @Override
     public void optionsChanged(ToolOptions options, String optionName, Object oldValue,
-                               Object newValue) {
+            Object newValue) {
         getOptions();
 
     }

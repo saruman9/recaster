@@ -77,7 +77,8 @@ public class RecastBackward extends RecastForward {
                 return null;
             }
             highSymbol = findHighSymbol(storageAddress, highFunction);
-        } else {
+        }
+        else {
             highSymbol = variable.getSymbol();
         }
         return highSymbol;
@@ -92,7 +93,8 @@ public class RecastBackward extends RecastForward {
         // op could be a PTRSUB, need to dig it out...
         else if (tokenAtCursor instanceof ClangVariableToken) {
             PcodeOp op = tokenAtCursor.getPcodeOp();
-            storageAddress = HighFunctionDBUtil.getSpacebaseReferenceAddress(program.getAddressFactory(), op);
+            storageAddress =
+                HighFunctionDBUtil.getSpacebaseReferenceAddress(program.getAddressFactory(), op);
         }
         return storageAddress;
     }
@@ -102,7 +104,8 @@ public class RecastBackward extends RecastForward {
         if (addr.isStackAddress()) {
             LocalSymbolMap localSymbolMap = highFunction.getLocalSymbolMap();
             highSymbol = localSymbolMap.findLocal(addr, null);
-        } else {
+        }
+        else {
             GlobalSymbolMap gsym = highFunction.getGlobalSymbolMap();
             highSymbol = gsym.getSymbol(addr);
         }
@@ -111,7 +114,7 @@ public class RecastBackward extends RecastForward {
 
     @Override
     public void init() {
-        setPopupMenuData(new MenuData(new String[]{"Recast variable backward"}, "Decompile"));
+        setPopupMenuData(new MenuData(new String[] { "Recast variable backward" }, "Decompile"));
         setHelpLocation(new HelpLocation(PLUGIN_NAME, HELP_ANCHOR));
     }
 
@@ -120,9 +123,8 @@ public class RecastBackward extends RecastForward {
         DecompilerActionContext decompilerActionContext = (DecompilerActionContext) actionContext;
         if (decompilerActionContext.isDecompiling()) {
             Msg.showInfo(this, actionContext.getComponentProvider().getComponent(),
-                         "Decompiler Action Blocked",
-                         "You cannot perform Decompiler actions while the Decompiler is busy"
-            );
+                "Decompiler Action Blocked",
+                "You cannot perform Decompiler actions while the Decompiler is busy");
             return;
         }
         initDecompilerPanel(actionContext);
@@ -144,9 +146,11 @@ public class RecastBackward extends RecastForward {
         if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.BOTH) {
             dataType = infoParameter.first;
             name = infoParameter.second;
-        } else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_NAME) {
+        }
+        else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_NAME) {
             name = infoParameter.second;
-        } else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_TYPE) {
+        }
+        else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_TYPE) {
             dataType = infoParameter.first;
         }
 
@@ -164,7 +168,7 @@ public class RecastBackward extends RecastForward {
         }
 
         HighSymbol highSymbol =
-                findHighSymbolFromToken(token, decompilerActionContext.getHighFunction());
+            findHighSymbolFromToken(token, decompilerActionContext.getHighFunction());
         if (highSymbol == null) {
             return;
         }
@@ -182,27 +186,25 @@ public class RecastBackward extends RecastForward {
 
         if (numParam < 0) {
             showError(String.format("Can't find parameter varnode %s of CALL PCode: %s",
-                                    varnodeParameter.toString(),
-                                    callPCodeOp.toString()
-            ));
+                varnodeParameter.toString(),
+                callPCodeOp.toString()));
             return null;
         }
         Parameter parameter = function.getParameter(numParam);
         if (parameter == null) {
             showError(String.format("Function %s (%s) don't have enough parameters.",
-                                    function.getName(),
-                                    function.getEntryPoint()
-            ));
+                function.getName(),
+                function.getEntryPoint()));
             return null;
         }
         return new Pair<>(parameter.getDataType(), parameter.getName());
     }
 
     private void changeSymbol(Program program,
-                              HighSymbol highSymbol,
-                              Varnode exactSpot,
-                              DataType dataType,
-                              String name) {
+            HighSymbol highSymbol,
+            Varnode exactSpot,
+            DataType dataType,
+            String name) {
         HighFunction highFunction = highSymbol.getHighFunction();
 
         boolean commitRequired = checkFullCommit(highSymbol, highFunction);
@@ -214,7 +216,8 @@ public class RecastBackward extends RecastForward {
             try {
                 HighVariable var = highFunction.splitOutMergeGroup(exactSpot.getHigh(), exactSpot);
                 highSymbol = var.getSymbol();
-            } catch (PcodeException e) {
+            }
+            catch (PcodeException e) {
                 showError(e.getMessage());
                 return;
             }
@@ -232,30 +235,34 @@ public class RecastBackward extends RecastForward {
                 // Don't use datatypes of other parameters if the datatypes were floating.
                 // Datatypes were floating if signature source was DEFAULT
                 boolean useDataTypes =
-                        highFunction.getFunction().getSignatureSource() != SourceType.DEFAULT;
+                    highFunction.getFunction().getSignatureSource() != SourceType.DEFAULT;
                 try {
                     HighFunctionDBUtil.commitParamsToDatabase(highFunction,
-                                                              useDataTypes,
-                                                              SourceType.USER_DEFINED
-                    );
+                        useDataTypes,
+                        SourceType.USER_DEFINED);
                     if (useDataTypes) {
                         HighFunctionDBUtil
                                 .commitReturnToDatabase(highFunction, SourceType.USER_DEFINED);
                     }
-                } catch (DuplicateNameException e) {
+                }
+                catch (DuplicateNameException e) {
                     throw new AssertException("Unexpected exception", e);
-                } catch (InvalidInputException e) {
+                }
+                catch (InvalidInputException e) {
                     showError(e.getMessage());
                 }
             }
             HighFunctionDBUtil.updateDBVariable(highSymbol, name, dataType, SourceType.ANALYSIS);
             successfulMod = true;
-        } catch (DuplicateNameException e) {
+        }
+        catch (DuplicateNameException e) {
             showError(e.getMessage());
-        } catch (InvalidInputException e) {
+        }
+        catch (InvalidInputException e) {
             showError(
-                    "Failed to re-type variable '" + highSymbol.getName() + "': " + e.getMessage());
-        } finally {
+                "Failed to re-type variable '" + highSymbol.getName() + "': " + e.getMessage());
+        }
+        finally {
             program.endTransaction(transaction, successfulMod);
         }
     }
@@ -290,11 +297,10 @@ public class RecastBackward extends RecastForward {
     DataType chooseDataType(PluginTool tool, Program program, DataType currentDataType) {
         DataTypeManager dataTypeManager = program.getDataTypeManager();
         DataTypeSelectionDialog chooserDialog =
-                new DataTypeSelectionDialog(tool,
-                                            dataTypeManager,
-                                            Integer.MAX_VALUE,
-                                            DataTypeParser.AllowedDataTypes.FIXED_LENGTH
-                );
+            new DataTypeSelectionDialog(tool,
+                dataTypeManager,
+                Integer.MAX_VALUE,
+                DataTypeParser.AllowedDataTypes.FIXED_LENGTH);
         chooserDialog.setInitialDataType(currentDataType);
         tool.showDialog(chooserDialog);
         return chooserDialog.getUserChosenDataType();

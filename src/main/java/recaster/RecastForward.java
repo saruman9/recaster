@@ -74,7 +74,7 @@ public class RecastForward extends DockingAction {
     }
 
     public void init() {
-        setPopupMenuData(new MenuData(new String[]{"Recast variable forward"}, "Decompile"));
+        setPopupMenuData(new MenuData(new String[] { "Recast variable forward" }, "Decompile"));
         setHelpLocation(new HelpLocation(PLUGIN_NAME, HELP_ANCHOR));
     }
 
@@ -83,7 +83,7 @@ public class RecastForward extends DockingAction {
         currentProgram = ((DecompilerProvider) componentProvider).getProgram();
         // The context should be right after applying `isEnabledContext`
         DecompilerActionContext decompilerActionContext =
-                (DecompilerActionContext) context.getContextObject();
+            (DecompilerActionContext) context.getContextObject();
         decompilerPanel = decompilerActionContext.getDecompilerPanel();
     }
 
@@ -92,9 +92,8 @@ public class RecastForward extends DockingAction {
         DecompilerActionContext decompilerActionContext = (DecompilerActionContext) actionContext;
         if (decompilerActionContext.isDecompiling()) {
             Msg.showInfo(this, actionContext.getComponentProvider().getComponent(),
-                         "Decompiler Action Blocked",
-                         "You cannot perform Decompiler actions while the Decompiler is busy"
-            );
+                "Decompiler Action Blocked",
+                "You cannot perform Decompiler actions while the Decompiler is busy");
             return;
         }
         initDecompilerPanel(actionContext);
@@ -108,27 +107,31 @@ public class RecastForward extends DockingAction {
             HighSymbol highSymbol = highVariable.getSymbol();
             if (highSymbol != null) {
                 processCallPCode(varnode, highSymbol.getName(), highSymbol.getDataType());
-            } else {
+            }
+            else {
                 processCallPCode(varnode, highVariable.getName(), highVariable.getDataType());
             }
-        } else if (opcode == PcodeOp.CAST) {
+        }
+        else if (opcode == PcodeOp.CAST) {
             processOutputPCode(token);
-        } else if (opcode == PcodeOp.PTRSUB) {
+        }
+        else if (opcode == PcodeOp.PTRSUB) {
             processPtrSubPCode(token);
-        } else if (opcode == PcodeOp.SUBPIECE || opcode == PcodeOp.PIECE ||
-                   opcode == PcodeOp.INT_ZEXT) {
+        }
+        else if (opcode == PcodeOp.SUBPIECE || opcode == PcodeOp.PIECE ||
+            opcode == PcodeOp.INT_ZEXT) {
             processOutputWithSizeChange(token);
-        } else if (opcode == PcodeOp.LOAD) {
+        }
+        else if (opcode == PcodeOp.LOAD) {
             processLoadPCode(token);
-        } else {
+        }
+        else {
             Msg.showWarn(this,
-                         decompilerPanel.getFieldPanel(),
-                         PLUGIN_NAME,
-                         String.format("PCodeOp %s not realized, but we try to change parameter " +
-                                       "of the function. Please check the result.",
-                                       pcodeOp.getMnemonic()
-                         )
-            );
+                decompilerPanel.getFieldPanel(),
+                PLUGIN_NAME,
+                String.format("PCodeOp %s not realized, but we try to change parameter " +
+                    "of the function. Please check the result.",
+                    pcodeOp.getMnemonic()));
             Msg.debug(this, pcodeOp.toString());
             processOutputPCode(token);
         }
@@ -155,10 +158,9 @@ public class RecastForward extends DockingAction {
             dataType = structure.getComponentAt(offset).getDataType();
             if (name == null) {
                 name = OptionDialog.showInputSingleLineDialog(this.decompilerPanel,
-                                                              PLUGIN_NAME,
-                                                              "Field name:",
-                                                              "unknown"
-                );
+                    PLUGIN_NAME,
+                    "Field name:",
+                    "unknown");
                 if (name == null) {
                     return;
                 }
@@ -167,13 +169,15 @@ public class RecastForward extends DockingAction {
                     return;
                 }
             }
-        } else {
+        }
+        else {
             name = token.getText();
             HighVariable highVariable = outputVarnode.getHigh();
             HighSymbol highSymbol = highVariable.getSymbol();
             if (highSymbol != null) {
                 dataType = highSymbol.getDataType();
-            } else {
+            }
+            else {
                 dataType = highVariable.getDataType();
             }
         }
@@ -184,9 +188,8 @@ public class RecastForward extends DockingAction {
 
     private void processOutputWithSizeChange(ClangToken token) {
         int yesNo = OptionDialog.showYesNoDialog(this.decompilerPanel,
-                                                 PLUGIN_NAME,
-                                                 "You will change size of parameter. Are you sure?"
-        );
+            PLUGIN_NAME,
+            "You will change size of parameter. Are you sure?");
         if (yesNo != 1) {
             return;
         }
@@ -202,7 +205,8 @@ public class RecastForward extends DockingAction {
         if (highSymbol != null) {
             name = highSymbol.getName();
             dataType = highSymbol.getDataType();
-        } else {
+        }
+        else {
             name = highVariable.getName();
             dataType = highVariable.getDataType();
         }
@@ -212,8 +216,8 @@ public class RecastForward extends DockingAction {
     }
 
     private void processCallPCode(Varnode varnode,
-                                  String name,
-                                  DataType dataType) {
+            String name,
+            DataType dataType) {
         if (varnode == null) {
             showError("Too much PCodes before CALL PCode!");
             return;
@@ -284,25 +288,23 @@ public class RecastForward extends DockingAction {
     }
 
     private void changeParameter(PcodeOp callPCode,
-                                 Varnode varnodeParameter,
-                                 String name,
-                                 DataType dataType) {
+            Varnode varnodeParameter,
+            String name,
+            DataType dataType) {
         int numParam = Arrays.asList(callPCode.getInputs()).indexOf(varnodeParameter) - 1;
         Function function = getFunctionByAddress(callPCode.getInput(0).getAddress());
 
         if (numParam < 0) {
             showError(String.format("Can't find parameter varnode %s of CALL PCode: %s",
-                                    varnodeParameter.toString(),
-                                    callPCode.toString()
-            ));
+                varnodeParameter.toString(),
+                callPCode.toString()));
             return;
         }
         Parameter parameter = function.getParameter(numParam);
         if (parameter == null) {
             showError(String.format("Function %s (%s) don't have enough parameters.",
-                                    function.getName(),
-                                    function.getEntryPoint()
-            ));
+                function.getName(),
+                function.getEntryPoint()));
             return;
         }
         SourceType sourceTypeParameter = parameter.getSource();
@@ -316,15 +318,19 @@ public class RecastForward extends DockingAction {
             if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.BOTH) {
                 parameter.setDataType(dataType, SourceType.ANALYSIS);
                 parameter.setName(name, SourceType.ANALYSIS);
-            } else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_NAME) {
+            }
+            else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_NAME) {
                 parameter.setName(name, SourceType.ANALYSIS);
-            } else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_TYPE) {
+            }
+            else if (plugin.getTypeNameOverrideOption() == TypeNameOverrideOption.ONLY_TYPE) {
                 parameter.setDataType(dataType, SourceType.ANALYSIS);
             }
             successfulMod = true;
-        } catch (InvalidInputException | DuplicateNameException e) {
+        }
+        catch (InvalidInputException | DuplicateNameException e) {
             showError(e.getMessage());
-        } finally {
+        }
+        finally {
             currentProgram.endTransaction(transactionId, successfulMod);
         }
     }
@@ -358,10 +364,12 @@ public class RecastForward extends DockingAction {
         if (pCodeOp.getOpcode() == PcodeOp.CALL) {
             callPCodeOp = pCodeOp;
             return inputs.contains(varnode);
-        } else if (pCodeOp.getOpcode() == PcodeOp.INT_ADD) {
+        }
+        else if (pCodeOp.getOpcode() == PcodeOp.INT_ADD) {
             // TODO For all Opcodes, that not match algo (not CALL, CAST, PTRSUB, (SUB)PIECE, etc) return false
             return false;
-        } else {
+        }
+        else {
             ClangNode parentToken = token.Parent();
             if (!(parentToken instanceof ClangStatement)) {
                 return false;
@@ -369,7 +377,8 @@ public class RecastForward extends DockingAction {
             PcodeOp parentPCodeOp = ((ClangStatement) parentToken).getPcodeOp();
             if (parentPCodeOp.getOpcode() == PcodeOp.CALL) {
                 return checkCallPCode(parentPCodeOp, pCodeOp.getOutput().getDescendants());
-            } else if (parentPCodeOp.getOpcode() == PcodeOp.CAST) {
+            }
+            else if (parentPCodeOp.getOpcode() == PcodeOp.CAST) {
                 PcodeOp inputPCodeOp = parentPCodeOp.getInput(0).getDef();
                 if (inputPCodeOp.getOpcode() != PcodeOp.CALL) {
                     return false;
@@ -389,12 +398,14 @@ public class RecastForward extends DockingAction {
                     this.callPCodeOp = callPCodeOp;
                     return true;
                 }
-            } else {
+            }
+            else {
                 Varnode output = pCodeOpDescend.getOutput();
                 if (inputsParent.contains(output)) {
                     this.callPCodeOp = callPCodeOp;
                     return true;
-                } else {
+                }
+                else {
                     if (output != null && checkCallPCode(callPCodeOp, output.getDescendants())) {
                         return true;
                     }
@@ -410,7 +421,6 @@ public class RecastForward extends DockingAction {
 
     private void debugPCode(PcodeOp pcodeOp, String name, DataType dataType) {
         Msg.debug(this,
-                  String.format("%s; NEW: %s %s", pcodeOp.toString(), dataType.toString(), name)
-        );
+            String.format("%s; NEW: %s %s", pcodeOp.toString(), dataType.toString(), name));
     }
 }
