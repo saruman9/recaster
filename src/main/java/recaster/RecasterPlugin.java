@@ -73,7 +73,7 @@ public class RecasterPlugin extends ProgramPlugin implements OptionsChangeListen
      * @param tool The plugin tool that this plugin is added to.
      */
     public RecasterPlugin(PluginTool tool) {
-        super(tool, false, false);
+        super(tool);
         createActions();
         initializeOptionListeners();
         getOptions();
