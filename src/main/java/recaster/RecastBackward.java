@@ -92,7 +92,7 @@ public class RecastBackward extends RecastForward {
         // op could be a PTRSUB, need to dig it out...
         else if (tokenAtCursor instanceof ClangVariableToken) {
             PcodeOp op = tokenAtCursor.getPcodeOp();
-            storageAddress = HighFunctionDBUtil.getSpacebaseReferenceAddress(program, op);
+            storageAddress = HighFunctionDBUtil.getSpacebaseReferenceAddress(program.getAddressFactory(), op);
         }
         return storageAddress;
     }
